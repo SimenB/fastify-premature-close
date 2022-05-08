@@ -5,6 +5,8 @@ import contentDisposition from 'content-disposition';
 import Fastify from 'fastify';
 import fastifyCompress from 'fastify-compress';
 import fastifyStatic from 'fastify-static';
+import http from 'http';
+import { pipeline } from 'stream/promises';
 
 const fastify = Fastify();
 
@@ -22,6 +24,7 @@ fastify.get('/image.jpeg', (_request, reply) => {
   reply
     .header('content-disposition', contentDisposition(filename))
     .compress(createReadStream(filename));
+    // .send(createReadStream(filename));
 });
 
 fastify.setErrorHandler((error, _request, reply) => {
@@ -30,6 +33,25 @@ fastify.setErrorHandler((error, _request, reply) => {
   reply.status(500).send();
 });
 
-await fastify.listen(8081);
+const serverUrl = await fastify.listen(8081);
 
-console.log('Open http://localhost:8081');
+// console.log('Open http://localhost:8081');
+
+const consume = async (res) => {
+  const chunks = []
+  for await (const chunk of res) {
+    console.log({ resChunkLength: chunk.toString().length })
+    chunks.push(chunk.toString())
+  }
+
+  const payload = chunks.join('')
+  console.log({ payloadLength: payload.length })
+  return chunks
+}
+
+const req = http.get(`${serverUrl}/image.jpeg`)
+req.on('response', async res => {
+  setTimeout(() => res.destroy(), 40)
+  await pipeline(res, consume)
+  fastify.close()
+})
