@@ -3,8 +3,8 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import contentDisposition from 'content-disposition';
 import Fastify from 'fastify';
-import fastifyCompress from 'fastify-compress';
-import fastifyStatic from 'fastify-static';
+import fastifyCompress from '@fastify/compress';
+import fastifyStatic from '@fastify/static';
 
 const fastify = Fastify();
 
@@ -30,6 +30,6 @@ fastify.setErrorHandler((error, _request, reply) => {
   reply.status(500).send();
 });
 
-await fastify.listen(8081);
+await fastify.listen({ port: 8081 });
 
 console.log('Open http://localhost:8081');

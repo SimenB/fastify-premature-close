@@ -4,9 +4,9 @@
   "type": "module",
   "license": "MIT",
   "devDependencies": {
+    "@fastify/compress": "^5.0.0",
+    "@fastify/static": "^5.0.2",
     "content-disposition": "^0.5.4",
-    "fastify": "^3.27.4",
-    "fastify-compress": "^4.0.1",
-    "fastify-static": "^4.6.1"
+    "fastify": "^3.27.4"
   }
 }
