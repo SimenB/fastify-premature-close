@@ -8,8 +8,8 @@ import fastifyStatic from '@fastify/static';
 
 const fastify = Fastify();
 
-fastify.register(fastifyCompress);
-fastify.register(fastifyStatic, {
+await fastify.register(fastifyCompress);
+await fastify.register(fastifyStatic, {
   root: dirname(fileURLToPath(import.meta.url)),
 });
 
